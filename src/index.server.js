@@ -2,6 +2,7 @@ const express = require("express");
 const env = require("dotenv");
 const { response } = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const app = express();
 
 const bodyParser = require("body-parser");
@@ -25,6 +26,7 @@ connect();
 // environment variable
 env.config();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use("/api", authRoutes);
 app.get("/", (req, res) => {

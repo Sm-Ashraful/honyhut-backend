@@ -24,8 +24,22 @@ exports.signup = async (req, res) => {
 
     const savedUser = await _user.save();
     if (savedUser) {
+      const token = jwt.sign(
+        { _id: savedUser._id, role: savedUser.role },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "48h",
+        }
+      );
+      res.cookie("token", token, { expiresIn: "48h" });
       return res.status(201).json({
         message: "Sign Up successfully...!",
+        token: token,
+        user: {
+          _id: savedUser._id,
+          name: savedUser.name,
+          email: savedUser.email,
+        },
       });
     }
   } catch (error) {
@@ -72,4 +86,10 @@ exports.signin = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: "Something Went Wrong" });
   }
+};
+exports.signout = (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({
+    message: "Signout successfully.....!",
+  });
 };

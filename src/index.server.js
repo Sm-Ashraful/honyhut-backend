@@ -10,6 +10,7 @@ port = 3080;
 
 // routes
 const authRoutes = require("./routes/auth");
+const categoryRoute = require("./routes/category");
 
 //mongo db connection
 const url =
@@ -29,6 +30,7 @@ env.config();
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/api", authRoutes);
+app.use("/api", categoryRoute);
 app.get("/", (req, res) => {
   res.send("App Works !!!!");
 });

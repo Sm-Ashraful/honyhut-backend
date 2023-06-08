@@ -4,13 +4,16 @@ const { response } = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
+const path = require("path");
 
-const bodyParser = require("body-parser");
 port = 3080;
 
 // routes
 const authRoutes = require("./routes/auth");
+const adminRoutes = require("./routes/Admin/auth");
 const categoryRoute = require("./routes/category");
+const ProductRoute = require("./routes/product");
+const cartRoute = require("./routes/cart");
 
 //mongo db connection
 const url =
@@ -28,9 +31,13 @@ connect();
 env.config();
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
+app.use("/public", express.static(path.join(__dirname, "uploads")));
 app.use("/api", authRoutes);
+app.use("/api", adminRoutes);
 app.use("/api", categoryRoute);
+app.use("/api", ProductRoute);
+app.use("/api", cartRoute);
 app.get("/", (req, res) => {
   res.send("App Works !!!!");
 });

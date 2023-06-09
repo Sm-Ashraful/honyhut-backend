@@ -6,7 +6,7 @@ const cors = require("cors");
 const app = express();
 const path = require("path");
 
-port = 3080;
+const port = process.env.PORT || 3080;
 
 // routes
 const authRoutes = require("./routes/auth");

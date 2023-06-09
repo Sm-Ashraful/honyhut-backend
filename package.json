@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "This is a e-commerce website using latest technology like next js and node js ",
   "main": "index.js",
+  "engines": {
+    "node": "18.13.0"
+  },
   "scripts": {
     "start": "nodemon ./src/index.server.js"
   },

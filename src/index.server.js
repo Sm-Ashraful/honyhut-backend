@@ -14,6 +14,7 @@ const adminRoutes = require("./routes/Admin/auth");
 const categoryRoute = require("./routes/category");
 const ProductRoute = require("./routes/product");
 const cartRoute = require("./routes/cart");
+const initialData = require("./routes/Admin/initialData");
 
 //mongo db connection
 const url =
@@ -38,6 +39,7 @@ app.use("/api", adminRoutes);
 app.use("/api", categoryRoute);
 app.use("/api", ProductRoute);
 app.use("/api", cartRoute);
+app.use("/api", initialData);
 app.get("/", (req, res) => {
   res.send("App Works !!!!");
 });
@@ -45,3 +47,5 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on the port::${port}`);
 });
+
+module.exports = app;

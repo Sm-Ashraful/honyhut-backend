@@ -27,7 +27,10 @@ function createCategories(categories, parentId = null) {
 exports.initialData = async (req, res) => {
   const categories = await Category.find({}).exec();
 
-  const products = await Product.find({ createdBy: req.user._id })
+  // if you need to specific user products it would by this
+  //  const products = await Product.find({ createdBy: req.user._id })
+
+  const products = await Product.find({})
     .select(
       "_id name price boxStyle productType unit quantity description offer productPictures details category"
     )

@@ -1,9 +1,6 @@
 const express = require("express");
 const shortid = require("shortid");
 
-const { MongoClient } = require("mongodb");
-const { GridFSBucket } = require("mongodb");
-
 const { requireSignin, adminMiddleware } = require("../common-middleware");
 
 const { addCategory, getCategories } = require("../controller/category");
@@ -28,11 +25,6 @@ router.post(
   upload.single("categoryImage"),
   addCategory
 );
-router.get(
-  "/category/getcategory",
-  requireSignin,
-  adminMiddleware,
-  getCategories
-);
+router.get("/category/getcategory", getCategories);
 
 module.exports = router;

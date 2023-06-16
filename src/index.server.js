@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 const path = require("path");
+const { MongoClient } = require("mongodb");
 
 const port = process.env.PORT || 3080;
 
@@ -27,6 +28,22 @@ async function connect() {
     console.log("Error: ", error);
   }
 }
+
+// async function connect() {
+//   try {
+//     const client = await MongoClient.connect(url, {
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//     });
+//     const db = client.db(process.env.); // Replace with your database name
+//     app.locals.db = db; // Store the database client in app locals
+
+//     console.log("MongoDb connected");
+//   } catch (error) {
+//     console.log("Error: ", error);
+//   }
+// }
+
 connect();
 // environment variable
 env.config();

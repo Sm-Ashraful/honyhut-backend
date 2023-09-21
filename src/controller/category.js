@@ -1,5 +1,6 @@
 const Category = require("../models/category");
 const slugify = require("slugify");
+const shortid = require("shortid");
 
 const createCategories = (categories, parentId = null) => {
   const categoryList = [];
@@ -14,6 +15,7 @@ const createCategories = (categories, parentId = null) => {
       _id: cate._id,
       name: cate.name,
       slug: cate.slug,
+      categoryImage: cate.categoryImage,
       parentId: cate.parentId,
       type: cate.type,
       children: createCategories(categories, cate._id),
@@ -26,13 +28,13 @@ const createCategories = (categories, parentId = null) => {
 exports.addCategory = (req, res) => {
   const categoryObj = {
     name: req.body.name,
-    slug: slugify(req.body.name),
+    slug: `${slugify(req.body.name)}-${shortid.generate()}`,
+    createdBy: req.user._id,
   };
   if (req.file) {
     categoryObj.categoryImage =
       process.env.API + "/public/" + req.file.filename;
   }
-  console.log("Image url: ", categoryObj);
   if (req.body.parentId) {
     categoryObj.parentId = req.body.parentId;
   }
@@ -57,4 +59,56 @@ exports.getCategories = (req, res) => {
     .catch((error) => {
       res.status(400).json({ error });
     });
+};
+exports.updateCategories = async (req, res) => {
+  const { _id, name, categoryImage } = req.body;
+  const category = {};
+  if (name) {
+    category.name = name;
+  }
+  if (categoryImage) {
+    category.categoryImage = categoryImage;
+  }
+  const updatedCategory = await Category.findOneAndUpdate({ _id }, category);
+  return res.status(201).json({ updatedCategory });
+};
+//   const updatedCategories = [];
+//   try {
+//     // Find the category by ID
+//     const category = await Category.findById(_id);
+
+//     // If the category is not found, return an error response
+//     if (!category) {
+//       return res.status(404).json({ error: "Category not found" });
+//     }
+//     let update = await Category.findOneAndUpdate({ _id }, { name: name });
+//     console.log("Update", update);
+//     res.status(201).json({ update });
+//     // // Update the necessary fields
+//     // category.name = name;
+//     // category.categoryImage = categoryImage;
+
+//     // // Save the updated category to the database
+//     // const updatedCategory = await category.save();
+
+//     // // Return a success response with the updated category data
+//     // res.json({ category: updatedCategory });
+//   } catch (error) {
+//     // Handle any errors that occur during the update process
+//     res.status(500).json({ error: "Failed to update category" });
+//   }
+// };
+
+exports.deleteCategory = async (req, res) => {
+  const { _id } = req.body;
+  console.log("Req body: ", req.body);
+  const deletedCategory = await Category.findOneAndDelete({
+    _id,
+  });
+  console.log("Deleted Category: ", deletedCategory);
+  if (deletedCategory) {
+    res.status(201).json({ message: "Category removed" });
+  } else {
+    res.status(400).json({ message: "Something went wrong" });
+  }
 };

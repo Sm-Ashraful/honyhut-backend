@@ -6,6 +6,7 @@ const cors = require("cors");
 const app = express();
 const path = require("path");
 const { MongoClient } = require("mongodb");
+var bodyParser = require("body-parser");
 
 const port = process.env.PORT || 3080;
 
@@ -50,6 +51,8 @@ env.config();
 
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
+// app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static(path.join(__dirname, "uploads")));
 app.use("/api", authRoutes);
 app.use("/api", adminRoutes);

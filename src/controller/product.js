@@ -7,7 +7,6 @@ const { response } = require("express");
 
 exports.createProduct = (req, res) => {
   // res.status(200).json({ file: req.files, body: req.body });
-
   const {
     name,
     price,
@@ -55,7 +54,7 @@ exports.createProduct = (req, res) => {
 exports.getProductsBySlug = (req, res) => {
   const { slug } = req.params;
   Category.findOne({ slug: slug })
-    .select("_id type")
+    .select("_id")
     .exec()
     .then((category) => {
       if (category) {
@@ -112,4 +111,14 @@ exports.getProductsBySlug = (req, res) => {
         return res.status(400).json({ error });
       }
     });
+};
+exports.getProductDetailsById = (req, res) => {
+  const { productId } = req.params;
+  if (productId) {
+    Product.findOne({ _id: productId })
+      .then((product) => res.status(200).json({ product }))
+      .catch((err) => res.status(400).json({ error }));
+  } else {
+    return res.status(400).json({ error: "Params required" });
+  }
 };

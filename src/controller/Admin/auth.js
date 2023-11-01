@@ -99,3 +99,37 @@ exports.signout = (req, res) => {
     message: "Signout successfully.....!",
   });
 };
+exports.getUsers = (req, res) => {
+  User.find({ role: "user" })
+    .select("name email")
+    .then((users) => res.json(users))
+    .catch((error) => {
+      return res
+        .status(500)
+        .json({ error: "An error occurred while fetching users." });
+    });
+};
+exports.getUserById = (req, res) => {
+  const userId = req.params.userId; // Assuming the user ID is provided in the request parameters
+  console.log("User Id: ", userId);
+
+  User.findById({ _id: userId })
+    .exec()
+    .then((user) => {
+      if (!user) {
+        // Handle the case where the user with the provided ID is not found
+        return res.status(404).json({ error: "User not found." });
+      }
+      res.json(user);
+    })
+    .catch((err) => {
+      if (err) {
+        // Handle the error, for example, by sending an error response
+        return res
+          .status(500)
+          .json({ error: "An error occurred while fetching the user." });
+      }
+    });
+
+  // Return the user as a JSON response
+};

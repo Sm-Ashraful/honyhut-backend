@@ -2,8 +2,6 @@ const Product = require("../models/product");
 const shortid = require("shortid");
 const slugify = require("slugify");
 const Category = require("../models/category");
-const { ResultWithContext } = require("express-validator/src/chain");
-const { response } = require("express");
 
 exports.createProduct = (req, res) => {
   // res.status(200).json({ file: req.files, body: req.body });
@@ -18,12 +16,12 @@ exports.createProduct = (req, res) => {
     category,
     quantity,
     offer,
-    createdBy,
   } = req.body;
   let productPictures = [];
+
   if (req.files.length > 0) {
     productPictures = req.files.map((file) => {
-      return { img: file.filename };
+      return { img: process.env.API + "/public/" + file.filename };
     });
   }
 
@@ -43,12 +41,22 @@ exports.createProduct = (req, res) => {
     createdBy: req.user._id,
   });
   product
+
     .save()
     .then((product) => {
       return res.status(201).json({ product });
     })
     .catch((error) => {
       return res.status(400).json({ error });
+    });
+};
+exports.getAllProduct = async (req, res) => {
+  Product.find({})
+    .then((products) => {
+      res.status(200).json({ products });
+    })
+    .catch((error) => {
+      res.status(400).json({ message: "Internal Server Error", error: error });
     });
 };
 exports.getProductsBySlug = (req, res) => {

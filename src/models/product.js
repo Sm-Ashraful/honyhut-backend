@@ -9,31 +9,22 @@ const productSchema = new mongoose.Schema(
     slug: {
       type: String,
       required: true,
-      unique: true,
     },
     price: {
       type: Number,
-      required: true,
     },
-    boxStyle: {
-      type: String,
-      require: true,
-    },
+
     productType: {
       type: String,
-      require: true,
     },
     unit: {
       type: String,
-      require: true,
     },
     quantity: {
       type: String,
-      require: true,
     },
     description: {
       type: String,
-      required: true,
       trim: true,
     },
     offer: {

@@ -4,6 +4,7 @@ const { requireSignin, adminMiddleware } = require("../common-middleware");
 const {
   createProduct,
   getProductsBySlug,
+  getAllProduct,
   getProductDetailsById,
 } = require("../controller/product");
 const multer = require("multer");
@@ -20,16 +21,25 @@ const storage = multer.diskStorage({
     cb(null, shortid.generate() + "-" + file.originalname);
   },
 });
-const uploads = multer({ storage });
+const upload = multer({ storage });
 
 router.post(
   "/product/create",
   requireSignin,
   adminMiddleware,
-  uploads.array("productPictures"),
+  upload.array("productPictures"),
   createProduct
 );
-router.get("/products/:slug", getProductsBySlug);
-router.get("/product/:productId", getProductDetailsById);
+router.get("/product/get-products", getAllProduct);
+router.get(
+  "/products/:slug",
+
+  getProductsBySlug
+);
+router.get(
+  "/product/:productId",
+
+  getProductDetailsById
+);
 
 module.exports = router;

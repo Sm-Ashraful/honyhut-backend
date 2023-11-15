@@ -14,6 +14,11 @@ const categorySchema = new mongoose.Schema(
     categoryImage: {
       type: String,
     },
+    categoryType: {
+      type: String,
+      enum: ["fake", "original"],
+      default: "original",
+    },
     parentId: {
       type: String,
     },

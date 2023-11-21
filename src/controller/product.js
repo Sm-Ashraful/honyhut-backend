@@ -59,6 +59,9 @@ exports.getAllProduct = async (req, res) => {
       res.status(400).json({ message: "Internal Server Error", error: error });
     });
 };
+// exports.getProductByCategory = async(req, res)=>{
+//  Category.findOne({category: req.})
+// }
 exports.getProductsBySlug = (req, res) => {
   const { slug } = req.params;
   Category.findOne({ slug: slug })
@@ -120,12 +123,27 @@ exports.getProductsBySlug = (req, res) => {
       }
     });
 };
+
 exports.getProductDetailsById = (req, res) => {
   const { productId } = req.params;
   if (productId) {
     Product.findOne({ _id: productId })
       .then((product) => res.status(200).json({ product }))
-      .catch((err) => res.status(400).json({ error }));
+      .catch((err) => res.status(400).json({ err }));
+  } else {
+    return res.status(400).json({ error: "Params required" });
+  }
+};
+
+//get product by product type
+exports.getProductByType = (req, res) => {
+  const { productType } = req.params;
+  if (productType) {
+    Product.find({
+      productType: productType,
+    })
+      .then((products) => res.status(200).json({ products }))
+      .catch((err) => res.status(400).json({ err }));
   } else {
     return res.status(400).json({ error: "Params required" });
   }

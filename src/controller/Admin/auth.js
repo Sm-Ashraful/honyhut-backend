@@ -3,8 +3,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const shortid = require("shortid");
 exports.signup = async (req, res) => {
-  console.log("Does it hit: ");
-  console.log("request : ", req.body);
   try {
     const user = await User.findOne({ email: req.body.email });
 

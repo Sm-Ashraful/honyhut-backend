@@ -7,6 +7,8 @@ const {
   getAllProduct,
   getProductDetailsById,
   getProductByType,
+  editProduct,
+  getProductIds,
 } = require("../controller/product");
 const multer = require("multer");
 const path = require("path");
@@ -32,8 +34,10 @@ router.post(
   createProduct
 );
 router.get("/product/get-products", getAllProduct);
-router.get("/products/:slug", getProductsBySlug);
-router.get("/product/:productId", getProductDetailsById);
-router.get("/products/:productType", getProductByType);
+router.get("/products/slug/:slug", getProductsBySlug);
+router.get("/product/id/:productId", getProductDetailsById);
+router.get("/products/type/:productType", getProductByType);
+router.get("/products/id/get-Ids", getProductIds);
+router.put("/products/edit/:productId", editProduct);
 
 module.exports = router;

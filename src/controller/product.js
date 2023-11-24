@@ -4,19 +4,19 @@ const slugify = require("slugify");
 const Category = require("../models/category");
 
 exports.createProduct = (req, res) => {
-  // res.status(200).json({ file: req.files, body: req.body });
+  const obj = JSON.parse(JSON.stringify(req.body));
   const {
     name,
     price,
     description,
-    boxStyle,
     details,
     unit,
     productType,
     category,
     quantity,
     offer,
-  } = req.body;
+    variant,
+  } = obj;
   let productPictures = [];
 
   if (req.files.length > 0) {
@@ -31,7 +31,7 @@ exports.createProduct = (req, res) => {
     price,
     quantity,
     description,
-    boxStyle,
+    variant,
     productType,
     details,
     unit,
@@ -40,8 +40,8 @@ exports.createProduct = (req, res) => {
     offer,
     createdBy: req.user._id,
   });
-  product
 
+  product
     .save()
     .then((product) => {
       return res.status(201).json({ product });
@@ -59,9 +59,22 @@ exports.getAllProduct = async (req, res) => {
       res.status(400).json({ message: "Internal Server Error", error: error });
     });
 };
-// exports.getProductByCategory = async(req, res)=>{
-//  Category.findOne({category: req.})
-// }
+//get all product id
+exports.getProductIds = async (req, res) => {
+  console.log("This is called", req.body);
+  try {
+    // Fetch all product IDs from the database
+    const products = await Product.find({}, "_id"); // Assuming '_id' is the ID field in your Product model
+
+    // Extract the product IDs from the array
+    const productIds = products.map((product) => product._id);
+
+    res.status(200).json({ productIds });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 exports.getProductsBySlug = (req, res) => {
   const { slug } = req.params;
   Category.findOne({ slug: slug })
@@ -126,6 +139,7 @@ exports.getProductsBySlug = (req, res) => {
 
 exports.getProductDetailsById = (req, res) => {
   const { productId } = req.params;
+
   if (productId) {
     Product.findOne({ _id: productId })
       .then((product) => res.status(200).json({ product }))
@@ -146,5 +160,36 @@ exports.getProductByType = (req, res) => {
       .catch((err) => res.status(400).json({ err }));
   } else {
     return res.status(400).json({ error: "Params required" });
+  }
+};
+
+//edit product by id
+exports.editProduct = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const updateFields = req.body; // Include all fields that can be updated
+
+    // Handle image updates
+    if (req.files) {
+      const newImages = req.files.map((file) => {
+        return { img: process.env.API + "/public/" + file.filename };
+      });
+      updateFields.productPictures = [
+        ...updateFields.productPictures,
+        ...newImages,
+      ];
+    }
+
+    // Update the product in the database
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      updateFields,
+      { new: true }
+    );
+
+    res.status(201).json({ product: updatedProduct });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

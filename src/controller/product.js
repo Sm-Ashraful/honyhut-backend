@@ -193,3 +193,14 @@ exports.editProduct = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+//simple
+exports.getCarAromaTherapyProduct = async (req, res) => {
+  try {
+    Product.find({ productType: "top" }).then((product) =>
+      res.status(200).json({ product })
+    );
+  } catch (error) {
+    res.status(400).json({ error: error, message: "Server Invalid!" });
+  }
+};

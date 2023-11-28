@@ -9,6 +9,7 @@ const {
   getProductByType,
   editProduct,
   getProductIds,
+  getCarAromaTherapyProduct,
 } = require("../controller/product");
 const multer = require("multer");
 const path = require("path");
@@ -39,5 +40,6 @@ router.get("/product/id/:productId", getProductDetailsById);
 router.get("/products/type/:productType", getProductByType);
 router.get("/products/id/get-Ids", getProductIds);
 router.put("/products/edit/:productId", editProduct);
+router.get("/product/car-aroma-therapy", getCarAromaTherapyProduct);
 
 module.exports = router;

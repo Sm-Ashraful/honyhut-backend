@@ -17,6 +17,7 @@ const categoryRoute = require("./routes/category");
 const ProductRoute = require("./routes/product");
 const cartRoute = require("./routes/cart");
 const initialData = require("./routes/Admin/initialData");
+const paymentRoutes = require("./routes/payments");
 
 //mongo db connection
 const url =
@@ -60,6 +61,7 @@ app.use("/api", categoryRoute);
 app.use("/api", ProductRoute);
 app.use("/api", cartRoute);
 app.use("/api", initialData);
+app.use("/api", paymentRoutes);
 app.get("/", (req, res) => {
   res.send("App Works !!!!");
 });

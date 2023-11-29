@@ -9,19 +9,23 @@ BigInt.prototype.toJSON = function () {
 
 const { paymentsApi } = new Client({
   accessToken:
-    "EAAAEC0IU3HQ5QBTTuc6yhCDAbH1EBkiW_leNqHtcwPh5Kj1PhE4lOII-LnRxhNR",
+    "EAAAFCuKLKzM54TybuFemPGU8iEahx_WZVa-o3btVtSAxs41fL8p-ahhfJ-6ZDIA",
   environment: "sandbox",
 });
 
 exports.CreatePayment = async (req, res) => {
+  const { sourceId, billingAddress, shippingAddress } = req.body;
   try {
     const { result } = await paymentsApi.createPayment({
       idempotencyKey: randomUUID(),
-      sourceId: req.body.sourceId,
+      sourceId: sourceId,
       amountMoney: {
         currency: "USD",
         amount: 1,
       },
+      billingAddress: billingAddress,
+      shippingAddress: shippingAddress,
+      buyerEmailAddress: billingAddress.email,
     });
     res.status(200).json(result);
   } catch (error) {

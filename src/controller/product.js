@@ -5,18 +5,7 @@ const Category = require("../models/category");
 
 exports.createProduct = (req, res) => {
   const obj = JSON.parse(JSON.stringify(req.body));
-  const {
-    name,
-    price,
-    description,
-    details,
-    unit,
-    productType,
-    category,
-    quantity,
-    offer,
-    variant,
-  } = obj;
+  const { name, productId, price, description, details, category } = obj;
   let productPictures = [];
 
   if (req.files.length > 0) {
@@ -28,16 +17,12 @@ exports.createProduct = (req, res) => {
   const product = new Product({
     name: name,
     slug: slugify(name),
+    productId,
     price,
-    quantity,
     description,
-    variant,
-    productType,
     details,
-    unit,
     productPictures,
     category,
-    offer,
     createdBy: req.user._id,
   });
 

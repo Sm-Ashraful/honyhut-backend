@@ -11,26 +11,16 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    productId: { type: String, required: true, unique: true },
     price: {
       type: Number,
     },
 
-    productType: {
-      type: String,
-    },
-    unit: {
-      type: String,
-    },
-    quantity: {
-      type: String,
-    },
     description: {
       type: String,
       trim: true,
     },
-    offer: {
-      type: Number,
-    },
+
     productPictures: [
       {
         img: { type: String },
@@ -42,8 +32,10 @@ const productSchema = new mongoose.Schema(
         review: String,
       },
     ],
-    details: { type: String, require: true },
-    variant: String,
+    details: {
+      type: mongoose.Schema.Types.Mixed,
+      required: true,
+    },
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",

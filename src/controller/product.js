@@ -62,6 +62,7 @@ exports.getProductIds = async (req, res) => {
 };
 exports.getProductsBySlug = (req, res) => {
   const { slug } = req.params;
+  console.log("Slug: ", slug);
   Category.findOne({ slug: slug })
     .select("_id")
     .exec()

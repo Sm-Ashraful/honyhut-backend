@@ -1,18 +1,30 @@
 const Product = require("../models/product");
-const shortid = require("shortid");
 const slugify = require("slugify");
 const Category = require("../models/category");
 
-exports.createProduct = (req, res) => {
+const { uploadOnCloudinary } = require("../../utils/cloudinary.js");
+
+exports.createProduct = async (req, res) => {
   const obj = JSON.parse(JSON.stringify(req.body));
   const { name, productId, price, description, details, category } = obj;
   let productPictures = [];
 
+  ///
   if (req.files.length > 0) {
-    productPictures = req.files.map((file) => {
-      return { img: process.env.API + "/public/" + file.filename };
-    });
+    productPictures = await Promise.all(
+      req.files.map(async (file) => {
+        try {
+          const response = await uploadOnCloudinary(file.path);
+          return { url: response.url };
+        } catch (error) {
+          // Handle upload error
+          console.error(error);
+          // ...
+        }
+      })
+    );
   }
+  console.log("Product Pictures: ", productPictures);
 
   const product = new Product({
     name: name,

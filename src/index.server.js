@@ -1,11 +1,10 @@
 const express = require("express");
 const env = require("dotenv");
-const { response } = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 const path = require("path");
-const { MongoClient } = require("mongodb");
+
 var bodyParser = require("body-parser");
 
 const port = process.env.PORT || 3080;
@@ -54,7 +53,7 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/public", express.static(path.join(__dirname, "uploads")));
 app.use("/api", authRoutes);
 app.use("/api", adminRoutes);
 app.use("/api", categoryRoute);

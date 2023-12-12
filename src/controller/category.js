@@ -1,6 +1,7 @@
 const Category = require("../models/category");
 const slugify = require("slugify");
 const shortid = require("shortid");
+const { uploadOnCloudinary } = require("../../utils/cloudinary.js");
 
 const createCategories = (categories, parentId = null) => {
   const categoryList = [];
@@ -25,7 +26,7 @@ const createCategories = (categories, parentId = null) => {
   return categoryList;
 };
 
-exports.addCategory = (req, res) => {
+exports.addCategory = async (req, res) => {
   const categoryObj = {
     name: req.body.name,
     slug: `${slugify(req.body.name)}-${shortid.generate()}`,
@@ -33,8 +34,8 @@ exports.addCategory = (req, res) => {
   };
 
   if (req.file) {
-    categoryObj.categoryImage =
-      process.env.API + "/uploads/" + req.file.filename;
+    const response = await uploadOnCloudinary(req.file.path);
+    categoryObj.categoryImage = response.url;
   }
   if (req.body.parentId) {
     categoryObj.parentId = req.body.parentId;

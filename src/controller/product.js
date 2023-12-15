@@ -1,6 +1,7 @@
 const Product = require("../models/product");
 const slugify = require("slugify");
 const Category = require("../models/category");
+const { APIFilters } = require("../../utils/APIFIlters.js");
 
 const { uploadOnCloudinary } = require("../../utils/cloudinary.js");
 
@@ -148,18 +149,6 @@ exports.getProductDetailsById = (req, res) => {
 };
 
 //get product by product type
-exports.getProductByType = (req, res) => {
-  const { productType } = req.params;
-  if (productType) {
-    Product.find({
-      productType: productType,
-    })
-      .then((products) => res.status(200).json({ products }))
-      .catch((err) => res.status(400).json({ err }));
-  } else {
-    return res.status(400).json({ error: "Params required" });
-  }
-};
 
 //edit product by id
 exports.editProduct = async (req, res) => {
@@ -192,13 +181,17 @@ exports.editProduct = async (req, res) => {
   }
 };
 
-//simple
-exports.getCarAromaTherapyProduct = async (req, res) => {
-  try {
-    Product.find({ productType: "top" }).then((product) =>
-      res.status(200).json({ product })
-    );
-  } catch (error) {
-    res.status(400).json({ error: error, message: "Server Invalid!" });
-  }
+//filter product
+
+exports.getProducts = async (req, res, next) => {
+  console.log("Query: ", req.query);
+  const apiFilters = new APIFilters(Product.find(), req.query)
+    .search()
+    .filter();
+
+  let products = await apiFilters.query;
+
+  res.status(200).json({
+    products,
+  });
 };

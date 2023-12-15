@@ -7,10 +7,10 @@ const {
   getProductsBySlug,
   getAllProduct,
   getProductDetailsById,
-  getProductByType,
+
   editProduct,
   getProductIds,
-  getCarAromaTherapyProduct,
+  getProducts,
 } = require("../controller/product");
 
 const router = express.Router();
@@ -25,9 +25,8 @@ router.post(
 router.get("/product/get-products", getAllProduct);
 router.get("/products/slug/:slug", getProductsBySlug);
 router.get("/product/id/:productId", getProductDetailsById);
-router.get("/products/type/:productType", getProductByType);
 router.get("/products/id/get-Ids", getProductIds);
 router.put("/products/edit/:productId", editProduct);
-router.get("/product/car-aroma-therapy", getCarAromaTherapyProduct);
+router.get("/product/filter", getProducts);
 
 module.exports = router;

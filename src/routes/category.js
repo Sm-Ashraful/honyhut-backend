@@ -7,6 +7,7 @@ const {
   getCategories,
   deleteCategory,
   updateCategories,
+  getCategoriesByName,
 } = require("../controller/category");
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.post(
   addCategory
 );
 router.get("/category/getcategory", getCategories);
+router.get("/category/get-categoryByName", getCategoriesByName);
 router.post("/category/delete", requireSignin, adminMiddleware, deleteCategory);
 router.post(
   "/category/updateCategories",

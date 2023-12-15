@@ -62,6 +62,27 @@ exports.getCategories = (req, res) => {
       res.status(400).json({ error });
     });
 };
+
+exports.getCategoriesByName = async (req, res) => {
+  const { name } = req.query;
+
+  try {
+    // Find the category with the specified name
+    const category = await Category.findOne({ name: name });
+
+    if (!category) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    // Find all categories that have the current category's ID as their parent ID
+    const childCategories = await Category.find({ parentId: category._id });
+    res.status(200).json({ category, childCategories });
+  } catch (error) {
+    console.log("Error: ", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 exports.updateCategories = async (req, res) => {
   const { _id, name, categoryImage } = req.body;
   const category = {};

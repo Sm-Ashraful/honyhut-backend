@@ -137,21 +137,3 @@ exports.deleteCategory = async (req, res) => {
 };
 
 ///for ctegory function
-exports.getCategoriesById = async (categoryId) => {
-  // const { Id } = req;
-  try {
-    // Find the category with the specified ID
-    const category = await Category.findById(categoryId);
-    // If the category is not found, return an error response
-    if (!category) {
-      return null;
-    }
-
-    // Find all categories that have the current category's ID as their parent ID
-    const childCategories = await Category.find({ parentId: category._id });
-    return childCategories;
-  } catch (error) {
-    console.log("Error: ", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};

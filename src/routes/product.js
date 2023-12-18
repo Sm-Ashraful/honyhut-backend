@@ -23,8 +23,8 @@ router.post(
   createProduct
 );
 router.get("/product/get-products", getAllProduct);
-router.get("/products/slug/:slug", getProductsBySlug);
-router.get("/product/id/:productId", getProductDetailsById);
+
+router.get("/product/id/:slug", getProductDetailsById);
 router.get("/products/id/get-Ids", getProductIds);
 router.put("/products/edit/:productId", editProduct);
 router.get("/product/filter", getProducts);

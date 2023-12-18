@@ -59,7 +59,6 @@ exports.getAllProduct = async (req, res) => {
 };
 //get all product id
 exports.getProductIds = async (req, res) => {
-  console.log("This is called", req.body);
   try {
     // Fetch all product IDs from the database
     const products = await Product.find({}, "_id"); // Assuming '_id' is the ID field in your Product model
@@ -74,10 +73,8 @@ exports.getProductIds = async (req, res) => {
   }
 };
 exports.getProductsBySlug = (req, res) => {
-  const { slug } = req.params;
-  console.log("Slug: ", slug);
-  Category.findOne({ slug: slug })
-    .select("_id")
+  const { id } = req;
+  Category.findOne({ _id: id })
     .exec()
     .then((category) => {
       if (category) {
@@ -86,61 +83,31 @@ exports.getProductsBySlug = (req, res) => {
           .then((products) => {
             if (category.type) {
               if (products.length > 0) {
-                res.status(200).json({
-                  products,
-                  priceRange: {
-                    under5k: 5000,
-                    under10k: 10000,
-                    under15k: 15000,
-                    under20k: 20000,
-                    under30k: 30000,
-                  },
-                  productsByPrice: {
-                    under5k: products.filter(
-                      (product) => product.price <= 5000
-                    ),
-                    under10k: products.filter(
-                      (product) =>
-                        product.price > 5000 && product.price <= 10000
-                    ),
-                    under15k: products.filter(
-                      (product) =>
-                        product.price > 10000 && product.price <= 15000
-                    ),
-                    under20k: products.filter(
-                      (product) =>
-                        product.price > 15000 && product.price <= 20000
-                    ),
-                    under30k: products.filter(
-                      (product) =>
-                        product.price > 20000 && product.price <= 30000
-                    ),
-                  },
-                });
+                return products;
               }
             } else {
-              res.status(200).json({ products });
+              return products;
             }
           })
           .catch((error) => {
             if (error) {
-              return res.status(400).json({ error });
+              return error;
             }
           });
       }
     })
     .catch((error) => {
       if (error) {
-        return res.status(400).json({ error });
+        return error;
       }
     });
 };
 
 exports.getProductDetailsById = (req, res) => {
-  const { productId } = req.params;
-
-  if (productId) {
-    Product.findOne({ _id: productId })
+  const { slug } = req.params;
+  console.log("slug: ", slug);
+  if (slug) {
+    Product.findOne({ slug: slug })
       .then((product) => res.status(200).json({ product }))
       .catch((err) => res.status(400).json({ err }));
   } else {
@@ -184,7 +151,6 @@ exports.editProduct = async (req, res) => {
 //filter product
 
 exports.getProducts = async (req, res, next) => {
-  console.log("Query: ", req.query);
   const apiFilters = new APIFilters(Product.find(), req.query)
     .search()
     .filter();
